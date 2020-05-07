@@ -1,0 +1,1 @@
+For compiling typescript you need two modules, a global typescript module and ts-node module to quickly execute ts scripts
