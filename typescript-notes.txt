@@ -1,1 +1,18 @@
-For compiling typescript you need two modules, a global typescript module and ts-node module to quickly execute ts scripts
+For compiling typescript you need two modules, a global typescript module and ts-node module to quickly execute ts scripts.
+General convention is to ompile the .ts file into js file and then run it via node.
+to combine these oepratiosn ts-node is used.
+so instead of tsc index.ts && node index.js, we can write ts-node index.ts
+
+Typs in typescript:
+Primitive Types: number, boolean, void, undefined, string, symbol, null
+Object Types: functions, arrays, classes, objects
+
+type annotations vs type inference
+type inference: if declaration and initialization on same line, else any
+When type annotations?
+  1. when we declare varaible and initialize it it a later point of time or line.
+  2. when we assign it a type variable that can't be inferred, probably custom type.
+  3. when a function returns as any type and yo uwant to clarify the return value.
+
+Type annotation for function will tell what parameters will the function receive and what value type it will return.
+Type inference for a function can only infer max of what value type it will return.
