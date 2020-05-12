@@ -2,3 +2,6 @@
 /maps/node_modules
 /maps/.cache/
 /maps/dist/
+/sortable/node_modules
+/sortable/build/
+

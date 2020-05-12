@@ -23,3 +23,53 @@ The types library is the most famous one and has type definiton file for almost 
 
 When you use a pipe operator what typescript does is, it will allow only common properties and methods that are present on
 all the types that were piped to be accessed on the instance created out of it. Else it will throw a error.
+
+just like npm init -y
+tsc hjas a init file which creates a config file that can allow you to customize your build process.
+it creates a tsconfig.json file and is checked automatically by tsc compiler every time before it starts compiling.
+Basically you configure root source folder and the build folder.
+And after this setting is done all you need to do is just type in tsc at terminal and it will compile automatically all
+the files present in .src folder and will create the output files, js files in build folder that you configured. 
+You calso have -w flag, that is watch flag!
+
+You can do npm init -y and npm install nodemon concurrently and create yourself a automatic process.
+
+You might be shocked to learn that js strings are immutable in a way taht if we have a string color = 'red';
+then it will show color[0] as 'r', but assign it like color[0] = 'Y'; and do a console.log on color, then it will again \
+show color value as 'red' only.
+
+As a result if you create a union type with array type and string then you cannot set the value of array by accessing its index.
+So beware! But typescript is really samrt as soon as you put a typegaurd any block of code, the property whatever is used in
+typegaurding check will behave specifically as that target typee for whatever is checked.
+for example if a collection is typed as number[] | string;
+now collection is no more allowed to manipulate via index accesing, but as soon as you 
+do this check if(collection instanceof Array) { /* here you can access colletion as if its only array */ }
+
+For typegarud to work proeprly use 'typeof' on primitive types and check for 'instance of' for reference types.
+
+If yu remember how the sorter is implemented as a concrete class rather than abstract class, you might have seen that it needs
+access to child class instance directly and there is lot of code verbiage wfor interaction
+Now making it abstract, the this will dynamically point at child class methods making instance methods of child class accessible
+and thus making the sorter reusable all the way for anything that confirms to interface sortable.
+
+Ofcourse any thing that is inheriting sortable will confirm to interface sortable since, it is abstract class and the child methods
+implementing them should definitely provide a concrete implementation!
+
+So for multiple objects interaction interfaces help you in forming a smoother communication.
+thats when implemented above in sorter project, you will have sorter as a concreate class and it expects some itnerface to be 
+exposed by every object that it wants to act on. This is where interfaces come up and help all the child classes confirm what
+to contract specification which sorter is expecting.
+
+The main advantage of it is loose coupling and promotes different objects to communicate together.
+
+A better example is in maps project where we imposed a specific contract on 'user' and 'company' which are 2 very dissimilar classes
+so that map class can consume them. 
+
+Abstract classes come up where multiple classes can have reusable code.
+Abstract classes impose some contract rules on all child classes so  that they can make use of common code present in parent class.
+So abastract classes can be used where you have code re use and want to form a child parent relation ship between 2 classes for code 
+reuse. And it will result in tight coupling as the name of the relation ship type suggests!
+
+
+
+
