@@ -4,4 +4,7 @@
 /maps/dist/
 /sortable/node_modules
 /sortable/build/
+/stats/.cache/
+/stats/build/
+/stats/node_modules
 
