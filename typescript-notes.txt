@@ -16,3 +16,10 @@ When type annotations?
 
 Type annotation for function will tell what parameters will the function receive and what value type it will return.
 Type inference for a function can only infer max of what value type it will return.
+
+Generally for any node module to work with typescript needs type definitiuon file for it, generally these are provided by 
+library maintainer or some random person could create this to help the javascript community and might put it as a package.
+The types library is the most famous one and has type definiton file for almost all popular libraries.
+
+When you use a pipe operator what typescript does is, it will allow only common properties and methods that are present on
+all the types that were piped to be accessed on the instance created out of it. Else it will throw a error.

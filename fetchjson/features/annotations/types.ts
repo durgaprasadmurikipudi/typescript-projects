@@ -135,8 +135,9 @@ printVehicle1(oldCivic)
 // Classes
 
 class VehicleC {
-  constructor(public color: string)    {
-    this.color = color;
+
+  constructor(public color: string){
+    
   } 
 
   private honk(): void {
@@ -144,7 +145,7 @@ class VehicleC {
   }
 }
 
-var carO = new CarC('BOw');
+var carO = new VehicleC('BOw');
 
 // The differences between es2015 classes nad typescript classes are presence of access modifiers
 // public -> by default this is the access specifier in typescript
