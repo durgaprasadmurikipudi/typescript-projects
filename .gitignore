@@ -7,4 +7,5 @@
 /stats/.cache/
 /stats/build/
 /stats/node_modules
+/web/node_modules
 

@@ -182,3 +182,7 @@ thats what traditional "multiple" inheritance in c++ suffer with, becuase when t
 all from a long parent children releationships, if in the way down you have same methods names in 2 different classes
 you are doomed.
 But the composition refers to a specific instannce and  delegates its activity to that instance only.
+
+Generics can also be used on functions and type inference helps even if you donot pass the specific type
+while invoking. You can also impose cosntraitns such as T implements some_interface to restrict, that 
+could be passed on as params.
