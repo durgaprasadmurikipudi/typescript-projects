@@ -70,6 +70,115 @@ Abstract classes impose some contract rules on all child classes so  that they c
 So abastract classes can be used where you have code re use and want to form a child parent relation ship between 2 classes for code 
 reuse. And it will result in tight coupling as the name of the relation ship type suggests!
 
+Even for node libraries as well, in typescript we have to install type definition file of that libraries.
+Generally for any otehr library we might do @types/name_of_that_library. But for node libraries you need not specically name 
+wghatever library that yo uare using itn node all you need to di is @types/node.
+
+Generally if you do not install the type definiton file for node, ts incorrectly reports that it could not find this module, so 
+lookout for that error.
+
+Inheritance vs Composition:
+If you see the stats project, there was a great use of Generics and Inheritance.
+It could also be done by composition.
+
+In case of inehritance way, what we did was we extracted some reading functionality and in child class we modified some 
+reading functionality as what it returned.
+As a result we created 2 classes, CsvFileReader and MatchReader.
+CsvFileReader does the reading from CsvFiles and MatchReader modifies the data returned from CsvFileReader.
+
+All well and good, how would we have done it if we have used the composition way ?
+We would have introduced an interface as what reader class should implement, and then in match reader we took in any reader
+and let it do the reading, from the data it returned we would modify it to way we liked.
+Suppose in future we introduced the data reading from api, all we need to do is create a APIReader and send it to MatchReader
+and thats it. Just write the functionaly of API Reader and need not do any changes in match reader.
+So as you see in inheritance there is tightcoupling, where as in composition there is loose coupling and also promotes
+principle of single responsibility for each class.
+
+To Learn more about differnces between inheritance and composition, look at below example:
+
+lets saw we have a wall and window classes,
+general definiton of them would be :
+class Wall {
+  color: string,
+  height: number,
+  width: number,
+  area(): number
+}
+
+class Window {
+  isOpen(): boolean,
+  toggleOpen(): void,
+  height: number,
+  width: number,
+  area(): number
+}
+
+Because you thought the height, width, area are common across you created a class Reactangle and tied window and wall to
+class reactangle to make use of the common properties.
+
+class Rectangle {
+  height: number,
+  width: number,
+  area(): number
+}
 
 
+class Wall ext Rectangle {
+  color: string
+}
 
+class Window ext Rectangle {
+  isOpen(): boolean,
+  toggleOpen(): void,
+}
+
+But what if there is a circle window ?
+:O
+
+class Circle {
+  radius: number,
+  area(): number
+}
+
+
+class CircleWindow ext Rectangle {
+  isOpen(): boolean,
+  toggleOpen(): void, /********************** see how the widnow class methods are duplciated across normal window and circular 
+                      *********************** window class */
+}
+
+How would it look if we have built it in composition way,
+class Wall {
+  color: string,
+  area(): number,
+  dimensions: shape // where shape is the interface, the area  call would be diverted to whatever the dimensions area method is.
+}
+
+class Window {
+  isOpen(): boolean,
+  toggleOpen(): void,
+  area(): number,
+  dimensions: shape
+}
+
+class Rectangle {
+  height: number,
+  width: number,
+  area(): number
+}
+
+class Circle {
+  radius: number,
+  area(): number
+}
+
+So here we are achieving compoistion via delegation , this sis what SG explained in his course as well taking the reference of 
+Design patterns, and so in JS prototypal inheritance is actually delegating and hence from a long time we are doing composition
+in Javascript ;) under name of inheritance :P
+Composition is not literal meaning where the desrired method is copied to the objet that we are currently working on,
+but the deleagation of a work to the most appropriate object by having a reference to it!!!
+
+thats what traditional "multiple" inheritance in c++ suffer with, becuase when they inherit they almost make a copy of the methods available
+all from a long parent children releationships, if in the way down you have same methods names in 2 different classes
+you are doomed.
+But the composition refers to a specific instannce and  delegates its activity to that instance only.
