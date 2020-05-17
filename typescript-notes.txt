@@ -213,3 +213,215 @@ write a common model that does all teh delegation to this Sync and otehr utility
 then inherit this Model class for all otehr business Model classes like User, CommentBox etc so that you need not duplicate this 
 delegation code. Why not compose model class? then again we would have to write accessors to direct all the common utility method
  calls to Model class. See we cant always favor composition and this is one great example where inheritance wins.
+
+Decorators are functions that can be used to change/modify/anything different properties/methods in the class.
+Not in the same as Javascript decorators.Used inside classes only. Understanding the order in which they run is the key to 
+understanding decorators.
+
+React - redux - typescript -- integration:
+
+How to create react app out of box using typescript.
+npx create-react-app rrts --typescript
+
+A basic component in typescript
+
+import React from 'react';
+import ReactDOM from 'react-dom';
+
+import Sample from './components/Sample';
+
+Every component is a generic component which takes in two types, one each for props and state.
+So you declare the props type, the props that this component is expecting
+interface AppProps {
+  color: string;
+};
+
+And also the state type as well, that this component will maintain
+interface AppState {
+  counter: number;
+};
+
+And instantiate the componetn with those respective types, else you will get a error, neither you can access 
+which is not there in mentioned types nor you can directly manipulate thenm as they are readonly.
+export default class App extends React.Component<AppProps, AppState> {
+  constructor(props: AppProps) {
+    super(props);
+
+    this.state = {
+      counter: 0
+    }
+  }
+
+Beautifully delcaring every function return type and being a good typescript boy!
+  increment = (): void => {
+    this.setState((prevState) => {
+      return {
+        counter: prevState.counter + 1
+      }
+    })
+  }
+
+  decrement = (): void => {
+    this.setState((prevState) => {
+      return {
+        counter: prevState.counter - 1 
+      }
+    })
+  }
+
+  render() {
+    return (
+      <div>
+        <div>{this.props.color}</div>
+        <div>
+          <button onClick={this.increment}>+</button>
+          <button onClick={this.decrement}>-</button>
+          {this.state.counter}
+        </div>
+        <Sample text='Hi There'/>
+      </div>
+    );
+  }
+};
+
+Lets see a basic component integrated with redux via connect method.
+import React from 'react';
+import { connect } from 'react-redux';
+// Declare all the actions types action creator functions before hand
+import { Todo, fetchTodos, deleteTodo } from './actions';
+// You also declare the state structure before hand more on that later.
+Here you brought in this type so that you can mention the type for mapStateToProps input param.
+Pretty solid no!?
+import { StoreState } from './reducers';
+
+//mentioning the props type of the component and also declare teh action creator functions as generic ones if you dont want to 
+// make a big mess yet!
+interface AppProps {
+  todos: Todo[];
+  fetchTodos(): any;
+  deleteTodo(id: number): any;
+};
+
+class App extends React.Component<AppProps> {
+  componentDidMount() {
+    this.props.fetchTodos();
+  }
+
+  // See see JSX element type :O
+  renderList(): JSX.Element[] {
+    return this.props.todos.map(todo => (<div key={todo.id} onClick={() => this.props.deleteTodo(todo.id)}>{todo.title}</div>));
+  }
+
+  render() {
+    return (
+    <div>{this.renderList()}</div>
+    );
+  }
+};
+
+// We being a good boy, we always mention the state type and so its structure and the return type for every function!
+const mapStateToProps = (state: StoreState): { todos: Todo[] } => {
+  return {
+    todos: state.todos
+  };
+};
+
+// Yup yup no mapdispatchtoProps, its too messy :P
+export default connect(mapStateToProps, { fetchTodos, deleteTodo })(App);
+
+//For all the imports below you will get teh type definition files by default but for react-redux library, you have to get it
+// from @types/react-redux
+import React from 'react';
+import ReactDOM from 'react-dom';
+import App from './App';
+import { createStore, applyMiddleware } from 'redux';
+import { Provider } from 'react-redux';
+import thunk from 'redux-thunk';
+
+import {mainReducer} from './reducers';
+
+const store = createStore(mainReducer, applyMiddleware(thunk));
+
+//Getting all types for redux as well
+import axios from 'axios';
+import { Dispatch } from 'redux';
+
+import { ActionTypes } from './types';
+
+//Mentionign each structure for each reducer type
+export interface Todo {
+  id: number;
+  title: string;
+  completed: boolean;
+}
+
+// And also the type of each action type
+export interface SetTodoAction {
+  type: ActionTypes.setTodos;
+  payload: Todo[];
+}
+
+export interface DeleteTodoAction {
+  type: ActionTypes.deleteTodo;
+  payload: number;
+}
+
+//then you write the action creator Beautifully
+export const fetchTodos = () => {
+  return async (dispatch: Dispatch) => {
+    const response = await axios.get<Todo[]>('https://jsonplaceholder.typicode.com/todos/');
+
+    //The lovely magic of generics!, dispatch takes in param to know and check if a valid type is being passed!
+    dispatch<SetTodoAction>({
+      type: ActionTypes.setTodos,
+      payload: response.data
+    });
+  }
+}
+
+export const deleteTodo = (id: number): DeleteTodoAction => {
+  return {
+    type: ActionTypes.deleteTodo,
+    payload: id
+  };
+};
+
+Always mention the action types in enum, you can also leave it to default to numeric values, nothing wrong in that.
+export enum ActionTypes {
+  setTodos = 'SET_TODOS',
+  deleteTodo = 'DELETE_TODO'
+}
+
+import { combineReducers } from 'redux';
+
+import { todosReducer } from './todos';
+import { Todo } from '../actions';
+
+//See how the state structure is being mentioned
+export interface StoreState {
+  todos: Todo[]
+}
+
+// Pass this type to combineReducers and you will see that it will alwyas check the store state to confirm to this type!
+export const mainReducer = combineReducers<StoreState>({
+  todos: todosReducer
+});
+
+import { Todo, SetTodoAction, DeleteTodoAction } from '../actions';
+import { ActionTypes } from '../actions/types';
+
+//The only problem is for declaring the action type, generally we just union all the action types for this reducer
+export const todosReducer = (state: Todo[] = [], action: SetTodoAction | DeleteTodoAction): Todo[] => {
+  switch(action.type) {
+    // The typescript intelligence comes out here, each case statement is a typegaurd! So action payload is not some union type\
+    // but exactly that type which it is supposed to be!
+    case ActionTypes.setTodos:
+      return action.payload;
+    case ActionTypes.deleteTodo:
+      return state.filter((todo: Todo) => todo.id !== action.payload);
+    default: 
+      return state;
+  }
+}
+
+Adios baby! Until next time, TS Course half bakedly complete. But enough for now!
